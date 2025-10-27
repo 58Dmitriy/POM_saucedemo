@@ -9,7 +9,7 @@ import os
 def driver():
     """Фикстура для запуска и завершения браузера"""
     options = Options()
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument("--start-maximized")
     prefs = {
         "profile.password_manager_leak_detection": False,
