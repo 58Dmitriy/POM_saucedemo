@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from pages.bace_page import BasePage
 
+
 class LoginPage(BasePage):
     """Страница логина"""
 
