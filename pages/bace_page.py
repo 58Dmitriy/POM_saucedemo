@@ -5,7 +5,7 @@ import allure
 
 
 class BasePage:
-    """Базовый класс для всех траниц"""
+    """Базовый класс для всех страниц"""
     def __init__(self, driver):
         self.driver: WebDriver = driver
         self.wait = WebDriverWait(driver, 10)

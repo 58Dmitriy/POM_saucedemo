@@ -1,12 +1,12 @@
 from selenium.webdriver.common.by import By
 from pages.bace_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
+import allure
 
 
 class InventoryPage(BasePage):
     """Страница каталога товаров"""
 
-    CART_BUTTON = (By.XPATH, '//*[@class="shopping_cart_link fa-layers fa-fw"]') # кнопка корзины
     ADD_TO_CART_BUTTON = (By.XPATH, '//button[text()="ADD TO CART"]') # кнопка добавить товар
     REMOVE_BUTTON = (By.XPATH, '//button[text()="REMOVE"]') # кнопка удалить товар из корзины
     SORTING = (By.XPATH, '//*[@class="product_sort_container"]') # кнопка открывающая список сортировки
@@ -15,13 +15,10 @@ class InventoryPage(BasePage):
     CART_COUNTER = (By.XPATH, '//span[@class="fa-layers-counter shopping_cart_badge"]')
     PRODUCT_PRICE = (By.XPATH, '//div[@class="inventory_item_price"]')
 
+    @allure.step("Открыть страницу каталога товаров")
     def open_inventory_page(self):
         """Открывает страницу каталога"""
         self.open("https://www.saucedemo.com/v1/inventory.html")
-
-    def go_to_cart(self):
-        """Кнопка перехода в корзину"""
-        self.click(self.CART_BUTTON)
 
     def get_all_products(self):
         locator = (By.XPATH, '//div[@class="inventory_item"]')
@@ -42,27 +39,14 @@ class InventoryPage(BasePage):
         locator = (By.XPATH, f'//div[text()="{product_name}"]/following::button[text()="REMOVE"]')
         return self.driver.find_element(*locator)
 
-    def cart_counter_is_displayed(self):
-        """Проверяет, отображается ли счетчик корзины"""
-        try:
-            counter = self.driver.find_element(*self.CART_COUNTER)
-            return counter.is_displayed()
-        except:
-            return False
-
-    def cart_counter(self):
-        """Возвращает количество товаров или 0 если счетчика нет"""
-        if self.cart_counter_is_displayed():
-            count_text = self.get_text(self.CART_COUNTER)
-            return int(count_text)
-        return 0
-
+    @allure.step("Добавить товар по названию в корзину")
     def add_to_cart(self, product_name):
         """Добавляет товар в корзину по имени"""
         product = self.find_product_by_name(product_name)
         press_button = self.press_button_add_cart_by_product_name(product_name)
         press_button.click()
 
+    @allure.step("Удалить товар по названию из корзины")
     def remove_from_cart(self, product_name):
         """Удаляет выбранный товар из корзины"""
         product = self.find_product_by_name(product_name)
@@ -79,9 +63,10 @@ class InventoryPage(BasePage):
         locator = (By.XPATH, f'//option[text()="{sort_name}"]')
         return self.driver.find_element(*locator)
 
+    @allure.step("Выбрать сортировку товара по названию сортировки")
     def select_sort_products(self, sort_name):
         self.select_sort_dropdown().click()
-        self.find_sort_element_by_name(sort_name).click()
+        self.click(self.find_sort_element_by_name(sort_name))
 
     def get_all_product_names(self):
         products_list = self.get_all_products()
@@ -101,6 +86,7 @@ class InventoryPage(BasePage):
             prices.append(float(price_text))
         return prices
 
+    @allure.step("Проверить сортировку по названию сортировки")
     def is_sorted_correctly(self, sort_name):
         """Универсальная проверка сортировки по названию"""
         if sort_name == 'Name (A to Z)':

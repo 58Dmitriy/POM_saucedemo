@@ -1,24 +1,32 @@
 from conftest import *
 import pytest
 from pages.inventory_page import InventoryPage
+from pages.header import Header
 from pages.login_page import LoginPage
-import time
 
 
+
+@pytest.mark.ui
+@pytest.mark.smoke
 def test_add_product_to_cart(driver):
     inventory_page = InventoryPage(driver)
     inventory_page.open_inventory_page()
+    header = Header(driver)
     inventory_page.add_to_cart("Sauce Labs Backpack")
     inventory_page.add_to_cart("Sauce Labs Bolt T-Shirt")
-    assert inventory_page.cart_counter() == 2
+    assert header.cart_counter() == 2
 
+@pytest.mark.ui
+@pytest.mark.smoke
 def test_remove_product_from_cart(driver):
     inventory_page = InventoryPage(driver)
+    header = Header(driver)
     inventory_page.open_inventory_page()
     inventory_page.add_to_cart('Test.allTheThings() T-Shirt (Red)')
     inventory_page.remove_from_cart('Test.allTheThings() T-Shirt (Red)')
-    assert inventory_page.cart_counter() == 0
+    assert header.cart_counter() == 0
 
+@pytest.mark.ui
 def test_sorting_products(driver):
     inventory_page = InventoryPage(driver)
     inventory_page.open_inventory_page()
