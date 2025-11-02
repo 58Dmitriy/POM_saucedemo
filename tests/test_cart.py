@@ -6,10 +6,12 @@ from pages.checkout_step_one_page import CheckoutPageOne
 from pages.checkout_step_two_page import CheckoutPageTwo
 from pages.checkout_complete_page import CheckoutPageComplete
 from pages.header import Header
+from utils.logger import log
 
 
 @pytest.mark.ui
 def test_cart_checkout(driver):
+    log.info("Старт теста: test_cart_checkout")
     cart_page = CartPage(driver)
     inventory_page = InventoryPage(driver)
     header = Header(driver)
@@ -26,10 +28,12 @@ def test_cart_checkout(driver):
     assert header.cart_counter() == 1
     cart_page.press_checkout_button()
     assert checkout_page_one.checkout_your_information()
+    log.info("Тест (test_cart_checkout) успешно завершён")
 
 @pytest.mark.ui
 @pytest.mark.smoke
 def test_full_cart_checkout(driver):
+    log.info("Старт теста: test_full_cart_checkout")
     cart_page = CartPage(driver)
     inventory_page = InventoryPage(driver)
     checkout_page_one = CheckoutPageOne(driver)
@@ -53,6 +57,7 @@ def test_full_cart_checkout(driver):
     assert cart_page.waiting_for_items_in_the_cart("Sauce Labs Bolt T-Shirt")
     checkout_page_two.press_finish_button()
     assert checkout_page_complete.complete_header()
+    log.info("Тест (test_full_cart_checkout) успешно завершён")
 
 
 

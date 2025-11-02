@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from pages.bace_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
 import allure
+from utils.logger import log
 
 
 class CartPage(BasePage):
@@ -17,16 +18,19 @@ class CartPage(BasePage):
         """Ожидает и находит элемент CART_LIST на странице"""
         self.wait.until(EC.presence_of_element_located(self.CART_LIST))
         return self.driver.find_element(*self.CART_LIST)
+    log.info(f"Настранице появился элемент: {CART_LIST}")
 
     @allure.step("Проверить наличие товара по названию")
     def waiting_for_items_in_the_cart(self, product_name):
         """Находит товар в корзине по названию"""
         locator = (By.XPATH, f'//div[@class="inventory_item_name" and text()="{product_name}"]')
+        log.info(f"Найден продукт по названию: {product_name}")
         return self.driver.find_element(*locator)
 
     def press_remove_button(self, product_name):
         """Поиск кнопки удаления у товара по названию"""
         locator = (By.XPATH, f'//div[text()="{product_name}"]/following::button[text()="REMOVE"]')
+        log.info(f"Найдена кнопка 'REMOVE' у товара: {product_name}")
         return self.driver.find_element(*locator)
 
     @allure.step("Удалить товар по названию")
@@ -34,11 +38,13 @@ class CartPage(BasePage):
         """Удаление товара по названию"""
         self.waiting_for_items_in_the_cart(product_name)
         self.press_remove_button(product_name).click()
+        log.info(f"Товар {product_name} удалён из корзины")
 
     @allure.step("Нажать на кнопку checkout")
     def press_checkout_button(self):
         """Нажать на кнопку checkout"""
         self.click(self.CHECKOUT_BUTTON)
+        log.info(f"Нажали на кнопку 'checkout'")
 
 
 
